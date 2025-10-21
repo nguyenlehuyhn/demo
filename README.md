@@ -7,7 +7,7 @@ git add .
 git commit -m "<mô tả ngắn>"
 
 # 3) Kéo về nếu người khác vừa đẩy (để gỡ xung đột trước)
-git pull 
+git pull --rebase
 
 # 4) Đẩy lên main
 git push -u origin main
