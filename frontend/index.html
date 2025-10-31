@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Recommender - Tìm quán ăn</title>
+    
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="width: 120px;"></div>
+            <h1 data-i18n="app_title">🍜 Food Recommender</h1>
+            <button id="btnLang" class="lang-btn">🌐 Language</button>
+        </div>
+        
+        <form class="search-form" id="searchForm">
+            <div class="form-group">
+                <label for="budget" data-i18n="budget_label">Ngân sách (VNĐ):</label>
+                <input type="number" id="budget" name="budget" data-i18n-placeholder="budget_placeholder" placeholder="Ví dụ: 100000" required min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="taste" data-i18n="taste_label">Món ăn muốn tìm:</label>
+                <input type="text" id="taste" name="taste" data-i18n-placeholder="taste_placeholder" placeholder="Ví dụ: phở, cơm, bún" required>
+            </div>
+
+            <div class="form-group">
+                <label for="location" data-i18n="location_label">Vị trí của bạn:</label>
+                <div class="location-group">
+                    <input type="text" id="location" name="location" data-i18n-placeholder="location_placeholder" placeholder="Nhập địa chỉ hoặc tọa độ" required>
+                    <button type="button" class="btn-secondary" id="getLocationBtn" data-i18n="geoloc_btn">📍 Lấy vị trí</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" data-i18n="search_btn">🔍 Tìm quán ăn</button>
+        </form>
+
+        <div class="results-section" id="results">
+            <div class="status-message" data-i18n="status_idle">
+                Nhập thông tin và nhấn "Tìm quán ăn" để bắt đầu
+            </div>
+        </div>
+    </div>
+
+    <div id="langOverlay" class="lang-overlay" hidden></div>
+    <div id="langModal" class="lang-modal" hidden>
+        <h3 class="modal-title" data-i18n="language_title">Language</h3>
+        <div class="lang-grid">
+            <button class="lang-item" data-lang="vi">Tiếng Việt</button>
+            <button class="lang-item" data-lang="en">English</button>
+            <button class="lang-item" data-lang="zh">中文</button>
+            <button class="lang-item" data-lang="ko">한국어</button>
+            <button class="lang-item" data-lang="ja">日本語</button>
+            <button class="lang-item" data-lang="es">Español</button>
+        </div>
+        <div class="actions">
+            <button id="btnLangClose" data-i18n="close_btn">Close</button>
+        </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <button class="chat-button" id="chatButton" aria-label="Open chat">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="url(#sparkle-gradient)" stroke="url(#sparkle-gradient)" stroke-width="1.5"/>
+            <defs>
+                <linearGradient id="sparkle-gradient" x1="2" y1="2" x2="22" y2="21.02" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#667eea"/>
+                    <stop offset="1" stop-color="#764ba2"/>
+                </linearGradient>
+            </defs>
+        </svg>
+    </button>
+
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">
+            <div class="chat-header-left">
+                <span class="chat-title">Seller Assistant</span>
+            </div>
+            <div class="chat-header-right">
+                <button class="chat-icon-btn" aria-label="Help">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C13.3132 2 14.6136 2.25866 15.8268 2.7612C17.0401 3.26375 18.1425 4.00035 19.0711 4.92893C19.9997 5.85752 20.7363 6.95991 21.2388 8.17317C21.7413 9.38643 22 10.6868 22 12C22 14.6522 20.9464 17.1957 19.0711 19.0711C17.1957 20.9464 14.6522 22 12 22C10.6868 22 9.38643 21.7413 8.17317 21.2388C6.95991 20.7363 5.85752 19.9997 4.92893 19.0711C3.05357 17.1957 2 14.6522 2 12C2 9.34784 3.05357 6.8043 4.92893 4.92893C6.8043 3.05357 9.34784 2 12 2ZM12 8C11.2044 8 10.4413 8.31607 9.87868 8.87868C9.31607 9.44129 9 10.2044 9 11H11C11 10.7348 11.1054 10.4804 11.2929 10.2929C11.4804 10.1054 11.7348 10 12 10C12.2652 10 12.5196 10.1054 12.7071 10.2929C12.8946 10.4804 13 10.7348 13 11C13 11.551 12.55 12 12 12C11.45 12 11 12.45 11 13V14H13V13.584C14.174 13.342 15 12.264 15 11C15 10.2044 14.6839 9.44129 14.1213 8.87868C13.5587 8.31607 12.7956 8 12 8ZM11 16V18H13V16H11Z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <button class="chat-icon-btn" id="chatCloseBtn" aria-label="Close chat">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-body">
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message">
+                    <div class="chat-avatar">🤖</div>
+                    <div>
+                        <div class="chat-message-content">
+                            Hi! I'm your Seller Assistant. How can I help you today? 👋
+                        </div>
+                        <div class="chat-suggestions">
+                            <button class="chat-chip" data-suggestion="Find restaurants">Find restaurants</button>
+                            <button class="chat-chip" data-suggestion="Help with search">Help with search</button>
+                            <button class="chat-chip" data-suggestion="About this app">About this app</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-footer">
+            <form class="chat-input-wrapper" id="chatForm">
+                <input 
+                    type="text" 
+                    id="chatInput" 
+                    placeholder="Type your message..." 
+                    autocomplete="off"
+                />
+                <button type="submit" class="chat-send-btn" aria-label="Send message">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    
+    <script src="./app.js"></script>
+</body>
+</html>
